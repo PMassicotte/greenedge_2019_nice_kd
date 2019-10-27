@@ -1,0 +1,116 @@
+---
+title: "Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic"
+subtitle: "GreenEdge Legacy meeting"
+author: "P. Massicotte, G. Bécu, S. Lambert-Girard, E. Leymarie and M. Babin"
+date: "2019-11-06 (Nice)"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: [xaringan-themer.css, styles.css]
+    self_contained: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+editor_options:
+  chunk_output_type: console
+---
+
+  <style type="text/css">
+.remark-slide-content {
+    font-size: 35px;
+    padding: 1em 4em 1em 4em;
+}
+.remark-inline-code {
+    font-size: 0.75em;
+}
+
+.verticalhorizontal {
+    text-align:center;
+ display:block;
+}
+
+.my-one-page-font > h1 {
+  font-size: 120px;
+}
+
+strong {
+    font-weight: normal;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE,
+  cache = FALSE,
+  out.width = "100%",
+  fig.align = "center",
+  fig.width = 8,
+  fig.asp = 0.618, # 1 / phi
+  fig.show = "hold",
+  dev = "svg",
+  message = FALSE,
+  warning = FALSE,
+  echo = FALSE
+)
+
+library(tidyverse)
+library(ggpmthemes)
+library(fontawesome)
+library(knitr)
+library(kableExtra)
+
+theme_set(theme_exo(base_size = 12))
+```
+
+```{r xaringan-themer, include=FALSE}
+library(xaringanthemer)
+duo(
+  code_font_family = "Fira Code",
+  code_font_url    = "https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css",
+  text_font_google = google_font("Questrial"),
+  inverse_background_color = "#456A76",
+  inverse_header_color = "#F5F5F5"
+  # Yanone Kaffeesatz
+)
+```
+
+# Outlines
+
+1. File formats for data archiving.
+
+2. Choosing the tools to read and manipulate your data.
+
+3. Files and data organization.
+
+4. Tidying and formatting data.
+
+5. Backups.
+
+6. Publishing your data.
+
+7. Practical exercises with your data.
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# Lets keep in touch!
+
+Presentation available here: http://tiny.cc/zxefez
+
+`r fontawesome::fa("paper-plane", fill = "#d3ba68")` philippe.massicotte@takuvik.ulaval.ca
+`r fontawesome::fa("link", fill = "#d3ba68")` www.pmassicotte.com
+`r fontawesome::fa("twitter", fill = "#d3ba68")` @philmassicotte
+`r fontawesome::fa("github", fill = "#d3ba68")` @pmassicotte
+
+---
+
+## sdf
+
+This is a test...
