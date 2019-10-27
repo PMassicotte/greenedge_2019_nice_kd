@@ -29,10 +29,10 @@ body {
 h1, h2, h3 {
   font-family: 'Yanone Kaffeesatz';
   font-weight: normal;
-  color: #F97B64;
+  color: #B2CCE5;
 }
 .remark-slide-content {
-  background-color: #1F4257;
+  background-color: #3c3c3c;
   font-size: 20px;
   
   
@@ -81,18 +81,18 @@ a, a > code {
   background-color: rgba(255,255,0,0.5);
 }
 .inverse {
-  background-color: #456A76;
-  color: #1F4257;
+  background-color: #ABB7B7;
+  color: #3c3c3c;
   
 }
 .inverse h1, .inverse h2, .inverse h3 {
-  color: #F5F5F5;
+  color: #3c3c3c;
 }
 .title-slide, .title-slide h1, .title-slide h2, .title-slide h3 {
-  color: #F97B64;
+  color: #3c3c3c;
 }
 .title-slide {
-  background-color: #1F4257;
+  background-color: #ABB7B7;
   
   
   
@@ -144,11 +144,11 @@ blockquote {
 th, td { padding: 5px; }
 .remark-slide thead, .remark-slide tfoot, .remark-slide tr:nth-child(even) { background: #627A89 }
 table.dataTable tbody {
-  background-color: #1F4257;
+  background-color: #3c3c3c;
   color: #FEFDFD;
 }
 table.dataTable.display tbody tr.odd {
-  background-color: #1F4257;
+  background-color: #3c3c3c;
 }
 table.dataTable.display tbody tr.even {
   background-color: #627A89;

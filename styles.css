@@ -1,0 +1,43 @@
+.remark-slide-content {
+    font-size: 35px;
+    padding: 1em 4em 1em 4em;
+}
+.remark-inline-code {
+    font-size: 0.75em;
+}
+
+.verticalhorizontal {
+    text-align:center;
+ display:block;
+}
+
+.my-one-page-font > h1 {
+  font-size: 120px;
+}
+
+.my-one-page-font > ul {
+  text-align: left;
+}
+
+.my-one-page-font {
+  color: white;
+}
+
+
+strong {
+    font-weight: normal;
+}
+
+small {
+  font-size: 18px;
+}
+
+.imgContainer{
+    float:top;
+    margin-right:10px;
+}
+
+.imgContainer2{
+    float:left;
+    margin-right:10px;
+}

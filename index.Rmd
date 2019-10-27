@@ -2,7 +2,7 @@
 title: "Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic"
 subtitle: "GreenEdge Legacy meeting"
 author: "P. Massicotte, G. Bécu, S. Lambert-Girard, E. Leymarie and M. Babin"
-date: "2019-11-06 (Nice)"
+date: "2019-11-06 (Nice, France)"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -16,30 +16,6 @@ output:
 editor_options:
   chunk_output_type: console
 ---
-
-  <style type="text/css">
-.remark-slide-content {
-    font-size: 35px;
-    padding: 1em 4em 1em 4em;
-}
-.remark-inline-code {
-    font-size: 0.75em;
-}
-
-.verticalhorizontal {
-    text-align:center;
- display:block;
-}
-
-.my-one-page-font > h1 {
-  font-size: 120px;
-}
-
-strong {
-    font-weight: normal;
-}
-
-</style>
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
@@ -72,45 +48,168 @@ theme_set(theme_exo(base_size = 12))
 library(xaringanthemer)
 duo(
   code_font_family = "Fira Code",
-  code_font_url    = "https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css",
+  code_font_url = "https://cdn.rawgit.com/tonsky/FiraCode/1.204/distr/fira_code.css",
   text_font_google = google_font("Questrial"),
-  inverse_background_color = "#456A76",
-  inverse_header_color = "#F5F5F5"
+  inverse_background_color = "#ABB7B7",
+  inverse_text_color = "#3c3c3c",
+  inverse_header_color = "#3c3c3c", 
+  background_color = "#3c3c3c", 
+  header_color = "#B2CCE5", 
+  title_slide_text_color = "#3c3c3c",
+  title_slide_background_color = "#ABB7B7"
   # Yanone Kaffeesatz
 )
 ```
 
 # Outlines
 
-1. File formats for data archiving.
+1. Challenges in estimating the vertical distribution of underwater light in ice-infested regions of the Arctic ocean.
 
-2. Choosing the tools to read and manipulate your data.
+2. A new method to estimate $K_d$ under sea ice covered in melt ponds.
 
-3. Files and data organization.
+3. 3D Monte Carlo numerical simulations of radiative transfer.
 
-4. Tidying and formatting data.
-
-5. Backups.
-
-6. Publishing your data.
-
-7. Practical exercises with your data.
+4. Results
 
 ---
 
 class: my-one-page-font, inverse, center, middle
 
-# Lets keep in touch!
-
-Presentation available here: http://tiny.cc/zxefez
-
-`r fontawesome::fa("paper-plane", fill = "#d3ba68")` philippe.massicotte@takuvik.ulaval.ca
-`r fontawesome::fa("link", fill = "#d3ba68")` www.pmassicotte.com
-`r fontawesome::fa("twitter", fill = "#d3ba68")` @philmassicotte
-`r fontawesome::fa("github", fill = "#d3ba68")` @pmassicotte
+# The vertical distribution of underwater light in the Arctic ocean
 
 ---
 
-## sdf
+# The importance of underwater light
 
-This is a test...
+- Important driver of many aquatic processes:
+  - primary production
+  - photodegradation of organic matter.
+
+- An adequate description of the underwater light regime is mandatory to understand energy fluxes in aquatic ecosystems.
+
+---
+
+# The importance of underwater light
+
+- Attenuation coefficient, $K_d$, is one of the most commonly used apparent optical properties (AOP) of seawater.
+
+  - A good estimation of this parameter is important for measuring or modelling primary production
+
+---
+
+# Vertical light distribution in open water
+
+Assuming an optically homogeneous water column, the decrease of light with increasing depth can be modeled as follow:
+
+Equation here: 
+
+---
+
+# Vertical light distribution in open water
+
+Show an example
+
+---
+
+# Vertical light distribution in ice-covered water
+
+In ice-covered regions, estimating the vertical distribution of light is much more challenging.
+
+Figure with meltpond (maybe Frey?)
+
+---
+
+# Vertical light distribution in ice-covered water
+
+Discrete light measurement do not capture the variability induced by sea ice features.
+
+--
+
+1. Local measurements: C-OPS
+
+--
+
+2. ROV and SUITE
+
+--
+
+3. why3
+
+---
+
+# The main objective
+
+Propose **a new method to estimate average irradiance over large spatially heterogeneous area** as it would be seen by drifting phytoplankton.
+
+Add the notation of $K_d$ with the bar (average Kd)
+
+---
+
+# Upward radiance: A New Hope
+
+- Why not use $K_{Lu}$?
+
+- Graph showing that Ed and Lu (thus Ked and KLu) are very similar.
+
+Fig. 3 + Fig. 4 with normalized vertical profiles
+
+---
+
+# What we did
+
+1. Used both *in-situ* and Monte-Carlo simulation to prove that (KLu) can be used as a proxy to estimate MEAN Ed(z) in the water column.
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# In-situ underwater light measurements at the ice camp
+
+---
+
+# Vertical light profile measurements
+
+- A total of 83 vertical light profiles were acquired
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# 3D Monte Carlo numerical simulations of radiative transfer
+
+---
+
+# The geometry
+
+Fig. 1
+
+Fig. 2
+
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# Main results
+
+---
+
+# Simulated underice light
+
+Light regime (downard + upward) under ice.
+
+Fig. 6+
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# Take home messages
+
+- (KLu), which is up to two times less influenced by a heterogeneous incident light field than Kd in the vicinity of a melt pond, can be used as a proxy to estimate Ed(z) in the water column.
+
+---
+
+# Questions?
+
+Massicotte P, Bécu G, Lambert-Girard S, Leymarie E, Babin M. Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences. 2018; 8(12):2693.
