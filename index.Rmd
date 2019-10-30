@@ -1,6 +1,6 @@
 ---
 title: "Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic"
-subtitle: "GreenEdge Legacy meeting"
+subtitle: "⚔<br/>GreenEdge Legacy meeting"
 author: "P. Massicotte, G. Bécu, S. Lambert-Girard, E. Leymarie and M. Babin"
 date: "2019-11-06 (Nice, France)"
 output:
@@ -790,3 +790,8 @@ class: my-one-page-font, inverse, center, middle
 # Questions?
 
 Massicotte, P., Bécu, G., Lambert-Girard, S., Leymarie, E., & Babin, M. (2018). Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences, 8(12), 2693. https://doi.org/10.3390/app8122693
+
+<br>
+<div class="holder">
+    <img src="img/greenedge.png" />
+</div>
