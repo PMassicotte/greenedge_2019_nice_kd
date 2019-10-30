@@ -41,8 +41,9 @@ library(fontawesome)
 library(knitr)
 library(kableExtra)
 library(patchwork)
+library(ggtext)
 
-theme_set(theme_exo(base_size = 12))
+theme_set(theme_poppins(base_size = 12))
 ```
 
 ```{r xaringan-themer, include=FALSE}
@@ -66,18 +67,6 @@ duo(
 # Read COPS data for figures
 cops <- data.table::fread(here::here("data/", "cops.csv.gz")) 
 ```
-
-# Outlines
-
-1. Challenges in estimating the vertical distribution of underwater light in ice-infested regions of the Arctic ocean.
-
-2. A new method to estimate $K_d$ under sea ice-covered in melt ponds.
-
-3. 3D Monte Carlo numerical simulations of radiative transfer.
-
-4. Results
-
----
 
 class: my-one-page-font, inverse, center, middle
 
@@ -129,9 +118,8 @@ df %>%
   guides(color = guide_legend(ncol = 2)) +
   labs(color = "Wavelengths") +
   scale_color_manual(values = color) +
-  xlab(bquote(mu*W%*%cm^{-2}%*%nm^{-1})) +
+  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)")
-
 ```
 
 ]
@@ -146,7 +134,7 @@ $$
 E_d = E_d{(0^-)}e^{-K_d(z)z}
 $$
 
-- $K_d (m^{-1})$ is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
+- $K_d(z)z~[m^{-1}]$ is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
 
 - An important metric used by biologists and to parameter models (**need for precise estimates**).
 
@@ -154,7 +142,9 @@ $$
 
 # Vertical light distribution in open water
 
-```{r, fig.height = 4, fig.width = 6, out.width="80%"}
+In open water, downward irradiance follows quite well a monotonically exponential decrease with depth.
+
+```{r, fig.height = 4, fig.width = 6, out.width="60%"}
 df <- cops %>% 
   filter(profile_filename == "GE2016.ICMP_ICEP_160706_CAST_005" & wavelength == 443)
 
@@ -164,19 +154,20 @@ df <- modelr::add_predictions(df, mod)
 
 df %>% 
   ggplot(aes(x = edz, y = depth)) +
-  geom_point(aes(color = "observations")) +
+  geom_point(aes(color = "observations"), show.legend = FALSE) +
   geom_path(aes(x = pred, color = "model")) +
   scale_y_reverse(limits = c(50, 0)) +
-  xlab(bquote(mu*W%*%cm^{-2}%*%nm^{-1})) +
+  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)") +
   theme(legend.title = element_blank()) +
-  theme(legend.position = c(0.8, 0.2)) +
-  scale_color_manual(values = c("model" = "red", "observations" = "black")) +
+  theme(legend.position = c(0.85, 0.2)) +
+  scale_color_manual(values = c("model" = "#E73E26", "observations" = "black")) +
   annotate("text", x = 20, y = 27, label = "Ed(z) == 38 * e^{-0.17 * z}", parse = TRUE) +
-  labs(title = "Downwelling irradiance at 443 nm",
-       subtitle = bquote(K[d]*"=0.17"~m^{-1}))
+  labs(
+    title = "Downwelling irradiance at 443 nm",
+    subtitle = bquote(K[d]*"=0.17"~m^{-1})
+  )
 ```
-
 
 ---
 
@@ -193,7 +184,9 @@ Due to **spatial horizontal heterogeneity**, measuring vertical light profiles u
 
 # Vertical light distribution in ice-covered water
 
-```{r, fig.height = 4, fig.width = 6, out.width="70%"}
+In ice-covered water, subsurface light maxima at a depth of around 10 m are clearly visible between 400 and 560 nm.
+
+```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
 source("https://gist.githubusercontent.com/friendly/67a7df339aa999e2bcfcfec88311abfc/raw/761a7688fba3668a84b2dfe42a655a1b246ca193/wavelength_to_rgb.R")
 
 df <- cops %>% 
@@ -212,7 +205,7 @@ df %>%
   guides(color = guide_legend(ncol = 2)) +
   labs(color = "Wavelengths") +
   scale_color_manual(values = color) +
-  xlab(bquote(mu*W%*%cm^{-2}%*%nm^{-1})) +
+  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)")
 ```
 
@@ -222,7 +215,7 @@ df %>%
 
 Estimating $K_{Ed}$ under ice represents a considerable challenge.
 
-```{r, fig.height = 3, fig.width = 4, out.width="55%"}
+```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
 
 df <- cops %>% 
   filter(profile_filename == "GE2015.ICMP_ICEP_150430_CAST_004" & wavelength == 443)
@@ -233,22 +226,24 @@ df <- modelr::add_predictions(df, mod)
 
 df %>% 
   ggplot(aes(x = edz, y = depth)) +
-  geom_point(aes(color = "observations")) +
+  geom_point(aes(color = "observations"), show.legend = FALSE) +
   geom_path(aes(x = pred, color = "model")) +
   scale_y_reverse(limits = c(50, 0)) +
-  xlab(bquote(mu*W%*%cm^{-2}%*%nm^{-1})) +
+  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)") +
   theme(legend.title = element_blank()) +
-  theme(legend.position = c(0.8, 0.2)) +
-  scale_color_manual(values = c("model" = "red", "observations" = "black")) +
+  theme(legend.position = c(0.75, 0.2)) +
+  scale_color_manual(values = c("model" = "#E73E26", "observations" = "black")) +
   annotate("text", x = 0.05, y = 10, label = "Ed(z) == 0.19 * e^{-0.03 * z}", parse = TRUE)
 ```
 
 ---
 
+class: my-one-page-font, inverse, center, middle
+
 # The main objective
 
-Propose **a new method to estimate average irradiance over large spatially heterogeneous area** as it would be seen by drifting phytoplankton.
+<b><i>Propose a new method to estimate average irradiance over large spatially heterogeneous area.</i></b>
 
 ---
 
@@ -264,7 +259,7 @@ One promising way is to use **upwelling radiance, $L_u$,** which is far less inf
 
 # Why upward radiance?
 
-Not influenced by the surface spatial heterogeneity (**no subsurface maximum**).
+Less influenced by the surface spatial heterogeneity (**no subsurface maximum**).
 
 ```{r, fig.height = 4, fig.width = 9, out.width="90%"}
 df <- cops %>% 
@@ -284,7 +279,8 @@ p1 <- df %>%
   theme(
     legend.position = "none"
   ) +
-  geom_hline(yintercept = 10, lty = 2, size = 0.25)
+  geom_hline(yintercept = 10, lty = 2, size = 0.25) +
+  paletteer::scale_color_paletteer_d(ggthemes, wsj_colors6)
 
 p2 <- df %>%
   filter(depth >= 10) %>% 
@@ -297,12 +293,15 @@ p2 <- df %>%
   labs(color = "Light type") +
   xlab("Normalized light") +
   ylab("Depth (m)") +
-  geom_hline(yintercept = 10, lty = 2, size = 0.25)
+  geom_hline(yintercept = 10, lty = 2, size = 0.25) +
+  paletteer::scale_color_paletteer_d(ggthemes, wsj_colors6)
 
-p1 + p2 +
+p1 + 
+  p2 +
   plot_annotation(
     title = "Downwelling irradiance vs upwelling radiance at 443 nm",
-    subtitle = "\nProfiles have been normalized to their maximum."
+    subtitle = "Profiles have been normalized to their maximum. <i style='color:#E23636'>At 10 m depth, the effects of surface heterogeneity<br>is reduced.</i>",
+    theme = theme(plot.title = element_text(margin = margin(2,0,2,0)), plot.subtitle = element_markdown(lineheight = 1.1))
   )
 
 ```
@@ -311,17 +310,35 @@ p1 + p2 +
 
 # What we did
 
-- Prove that $K_{Lu}$ can be used as a proxy to estimate the mean $\overline{K_{d}}$ in the water column using:
+- Show that $K_{Lu}$ can be used as a proxy to estimate the mean $\overline{K_{d}}$ in the water column using:
   
-  - *in-situ* C-OPS measurements (a total of 83 vertical light profiles were acquired)
+  - *in-situ* C-OPS measurements
   
-  - Monte-Carlo simulations
+  - Monte-Carlo simulations (SimulO)
 
 ---
 
 class: my-one-page-font, inverse, center, middle
 
 # In-situ underwater light measurements at the ice camp
+
+---
+
+# Sampling at the ice camp
+
+- At an ice camp where the water depth was 360 m, from 20 April to 27 July 2016.
+
+- Snow cover and landfast ice thickness varied between 0–49 cm and 106–149 cm, respectively.
+
+---
+
+# C-OPS measurements
+
+- A total of 83 vertical light profiles were acquired during the 2016 field campaigns.
+
+- Equipped with both **downward plane irradiance** $E_d(z)$ and **upward radiance** $L_u(z)$ radiometers.
+
+- At 19 wavelengths between 380 and 875 nm.
 
 ---
 
@@ -440,15 +457,40 @@ p2 <- ggplot() +
 p1 + p2
 ```
 
----
+<!-- The angular distribution and magnitude of the light field emitted by the surface were chosen to mimic observed field data. -->
 
-# Under-ice measured downward radiance distribution
+```{r, fig.height = 3, fig.width = 5, out.width="60%", eval=FALSE}
+df1 <- readxl::read_excel("data/angular_distribution.xlsx", n_max = 2, na = "NaN") %>% 
+  janitor::remove_empty() %>% 
+  gather(angle, value) %>% 
+  set_names(c("angle", "Measured under-ice\ndownward radiance distribution")) %>% 
+  mutate(angle = parse_number(angle))
 
-The angular distribution and magnitude of the light field emitted by the surface were chosen to mimic observed field data.
+df2 <- readxl::read_excel("data/angular_distribution.xlsx", skip = 4, n_max = 2) %>% 
+  janitor::remove_empty() %>% 
+  gather(angle, value) %>% 
+  set_names(c("angle", "Emitting source chosen\nfor the simulation")) %>% 
+  mutate(angle = parse_number(angle))
 
-<center>
-<img src="img/fig2.png" height="300" />
-</center>
+df <- bind_rows(df1, df2) %>% 
+  gather(source, value, -angle) %>% 
+  drop_na()
+
+df %>% 
+  ggplot(aes(x = angle, y = value, color = source)) +
+  geom_path() +
+  xlab(expression("Theta"~"("^degree*")")) +
+  ylab("Normalized raidance") +
+  theme(legend.title = element_blank()) +
+  theme(legend.justification = c(0, 0)) +
+  theme(legend.position = c(0.01, 0.01)) +
+  scale_x_continuous(limits = c(0, 90), breaks = seq(0, 90, by = 10)) +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
+  theme(legend.key.height = unit(1, "cm")) +
+  paletteer::scale_color_paletteer_d(ggthemes, wsj_colors6)
+
+```
+
 
 ---
 
@@ -470,9 +512,9 @@ The under-ice light estimated using $L_u$ field **is less influenced by the melt
 
 # Simulating the under-ice light field
 
-The vertical light profiles propagated in the water column using either $K_{Ed}$ or $K_{Lu}$.
+A greater dispersion around the reference profile occurred when using $K_d$ compared to those generated with $K_{Lu}$.
 
-```{r fig10, fig.height = 6, fig.width = 9, out.width="60%"}
+```{r profile_simulation, cache=TRUE}
 
 scientific_10x <- function(x) {
   parse(text = gsub("e", "%*%10^", scales::scientific_format()(x)))
@@ -481,12 +523,60 @@ scientific_10x <- function(x) {
 simulo <- feather::read_feather(here::here("data", "simulo_4_lambertian_sources_smoothed_radiance.feather"))
 
 reference_profile <- simulo %>%
-  mutate(class_25_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.25)), include.lowest = TRUE, right = TRUE, dig.lab = 5))) %>%
-  mutate(class_20_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.20)), include.lowest = TRUE, right = TRUE, dig.lab = 5))) %>%
-  mutate(class_15_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.15)), include.lowest = TRUE, right = TRUE, dig.lab = 5))) %>%
-  mutate(class_10_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.10)), include.lowest = TRUE, right = TRUE, dig.lab = 5))) %>%
-  mutate(class_05_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.05)), include.lowest = TRUE, right = TRUE, dig.lab = 5))) %>%
-  mutate(class_01_percent = as.character(cut(mid_distance, breaks = c(0, sqrt(25 / 0.01)), include.lowest = TRUE, right = TRUE, dig.lab = 5)))
+  mutate(class_25_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.25)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  )) %>%
+  mutate(class_20_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.20)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  )) %>%
+  mutate(class_15_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.15)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  )) %>%
+  mutate(class_10_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.10)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  )) %>%
+  mutate(class_05_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.05)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  )) %>%
+  mutate(class_01_percent = as.character(
+    cut(
+      mid_distance,
+      breaks = c(0, sqrt(25 / 0.01)),
+      include.lowest = TRUE,
+      right = TRUE,
+      dig.lab = 5
+    )
+  ))
 
 reference_profile <- reference_profile %>%
   gather(class_distance, range, starts_with("class")) %>%
@@ -616,21 +706,51 @@ labels <- c(
 predicted_light2 <- predicted_light %>% 
   mutate(source2 = ifelse(source == "Irradiance (Ed)", "Propagated~with~italic(K[d])", "Propagated~with~italic(K[Lu])"))
 
-reference_profile %>%
-  filter(range %in% c("[0,10]", "[0,12.91]", "[0,50]")) %>% 
-  mutate(source2 = ifelse(source == "Irradiance (Ed)", "Propagated~with~italic(K[d])", "Propagated~with~italic(K[Lu])")) %>% 
-  ggplot(aes(x = value, y = depth)) +
-  facet_grid(range ~ source2, scales = "free", labeller = labeller(source2 = label_parsed, range = label_value)) +
-  scale_y_reverse() +
-  geom_path(data = predicted_light2 %>% filter(range %in% c("[0,10]", "[0,12.91]", "[0,50]")), aes(x = predicted_light, color = mid_distance, group = mid_distance), size = 0.25) +
-  geom_path(size = 1) +
-  labs(color = str_wrap("Distance from the center of the melt pond (m)", 20)) +
-  scale_x_continuous(labels = scientific_10x, breaks = c(0, 3, 6)*1e6, limits = c(0, NA), expand = c(0.15, 0)) +
-  ylab("Depth (m)") +
-  xlab("Downward irradiance") +
-  theme(strip.text.y = element_text(size = 8)) +
-  scale_color_viridis_c()
 ```
+
+```{r, fig.height = 3.5, fig.width = 9, out.width="100%"}
+reference_profile %>%
+  filter(range %in% c("[0,50]")) %>%
+  mutate(
+    source2 = ifelse(
+      source == "Irradiance (Ed)",
+      "Propagated~with~italic(K[d])",
+      "Propagated~with~italic(K[Lu])"
+    )
+  ) %>%
+  ggplot(aes(x = value, y = depth)) +
+  facet_wrap(
+    ~source2,
+    scales = "free",
+    labeller = labeller(source2 = label_parsed, range = label_value)
+  ) +
+  scale_y_reverse() +
+  geom_path(
+    data = predicted_light2 %>% filter(range %in% c("[0,50]")),
+    aes(x = predicted_light, color = mid_distance, group = mid_distance),
+    size = 0.5
+  ) +
+  geom_path(size = 1, color = "#E23636") +
+  labs(
+    color = str_wrap("Distance from the center of the melt pond (m)", 20),
+    title = "Vertical light profiles propagated in the water column using either <i>K</i><sub>*d*</sub> or <i>K</i><sub>*Lu*</sub>",
+    subtitle = "The <span style='color:#E23636'>**thick red line**</span> represents the average <i>E</i><sub>*d*</sub> simulated for the <span style='color:#E23636'>**entire area**</span>. The <span style='color:#4B8D1F'>**green lines**</span> show the propagated <i>E</i><sub>*d*</sub><br> at different distances from the melt pond."
+  ) +
+  scale_x_continuous(
+    labels = scientific_10x,
+    breaks = c(0, 1, 2, 3) * 1e6,
+    limits = c(0, NA)
+    # expand = c(0.15, 0)
+  ) +
+  ylab("Depth (m)") +
+  xlab("Downward irradiance (number of photons)") +
+  paletteer::scale_color_paletteer_c(ggthemes, "Classic Area Green") +
+  theme(
+    plot.title = element_markdown(size = 14),
+    plot.subtitle = element_markdown(size = 10) 
+  )
+```
+
 
 ---
 
@@ -669,4 +789,4 @@ class: my-one-page-font, inverse, center, middle
 
 # Questions?
 
-Massicotte P, Bécu G, Lambert-Girard S, Leymarie E, Babin M. Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences. 2018; 8(12):2693.
+Massicotte, P., Bécu, G., Lambert-Girard, S., Leymarie, E., & Babin, M. (2018). Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences, 8(12), 2693. https://doi.org/10.3390/app8122693
