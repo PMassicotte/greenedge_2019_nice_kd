@@ -90,16 +90,7 @@ An adequate description of the underwater light regime is mandatory to understan
 
 Nowadays, measuring downwelling irradiance, $E_d$, in open water is pretty straightforward.
 
-.pull-left[
-
-<center>
-C-OPS deployment 
-<img src="img/cops_open_water.png" height="300" /> 
-</center>
-]
-
-.pull-right[
-```{r, fig.height=5}
+```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
 source("https://gist.githubusercontent.com/friendly/67a7df339aa999e2bcfcfec88311abfc/raw/761a7688fba3668a84b2dfe42a655a1b246ca193/wavelength_to_rgb.R")
 
 df <- cops %>% 
@@ -121,8 +112,6 @@ df %>%
   xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)")
 ```
-
-]
 
 ---
 
@@ -339,6 +328,8 @@ class: my-one-page-font, inverse, center, middle
 - Equipped with both **downward plane irradiance** $E_d(z)$ and **upward radiance** $L_u(z)$ radiometers.
 
 - At 19 wavelengths between 380 and 875 nm.
+
+<center><img src="img/cops_open_water.png" height="200"/></center>
 
 ---
 
