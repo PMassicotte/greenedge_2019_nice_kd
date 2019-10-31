@@ -15,3 +15,5 @@ kableExtra
 patchwork
 ggtext
 xaringanthemer
+minpack.lm
+modelr
