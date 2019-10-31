@@ -44,6 +44,8 @@ library(patchwork)
 library(ggtext)
 
 theme_set(theme_poppins(base_size = 12))
+
+source("https://gist.githubusercontent.com/friendly/67a7df339aa999e2bcfcfec88311abfc/raw/761a7688fba3668a84b2dfe42a655a1b246ca193/wavelength_to_rgb.R")
 ```
 
 ```{r xaringan-themer, include=FALSE}
@@ -91,8 +93,6 @@ An adequate description of the underwater light regime is mandatory to understan
 Nowadays, measuring downwelling irradiance, $E_d$, in open water is pretty straightforward.
 
 ```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
-source("https://gist.githubusercontent.com/friendly/67a7df339aa999e2bcfcfec88311abfc/raw/761a7688fba3668a84b2dfe42a655a1b246ca193/wavelength_to_rgb.R")
-
 df <- cops %>% 
   filter(profile_filename == "GE2016.ICMP_ICEP_160706_CAST_004") %>% 
   # drop_na(edz) %>% 
@@ -107,9 +107,14 @@ df %>%
   geom_path() +
   scale_y_reverse(limits = c(50, 0)) +
   guides(color = guide_legend(ncol = 2)) +
-  labs(color = "Wavelengths") +
+  labs(
+    color = "Wavelength (nm)",
+    title = "Vertical irradiance profiles",
+    subtitle = "Measured on 2016-07-06 in open water"
+
+  ) +
   scale_color_manual(values = color) +
-  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
+  xlab(bquote(E[d]~(mu~W%*%~cm^{-2}))) +
   ylab("Depth (m)")
 ```
 
@@ -123,7 +128,7 @@ $$
 E_d = E_d{(0^-)}e^{-K_d(z)z}
 $$
 
-- $K_d(z)z~[m^{-1}]$ is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
+- $K_d(z)~[m^{-1}]$ is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
 
 - An important metric used by biologists and to parameter models (**need for precise estimates**).
 
@@ -173,11 +178,9 @@ Due to **spatial horizontal heterogeneity**, measuring vertical light profiles u
 
 # Vertical light distribution in ice-covered water
 
-In ice-covered water, subsurface light maxima at a depth of around 10 m are clearly visible between 400 and 560 nm.
+In ice-covered water, **subsurface light maxima at a depth of around 10 m** are clearly visible between 400 and 560 nm.
 
-```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
-source("https://gist.githubusercontent.com/friendly/67a7df339aa999e2bcfcfec88311abfc/raw/761a7688fba3668a84b2dfe42a655a1b246ca193/wavelength_to_rgb.R")
-
+```{r, fig.height = 4, fig.width = 6, out.width="60%"}
 df <- cops %>% 
   filter(profile_filename == "GE2015.ICMP_ICEP_150430_CAST_004") %>% 
   # drop_na(edz) %>% 
@@ -192,7 +195,10 @@ df %>%
   geom_path() +
   scale_y_reverse(limits = c(50, 0)) +
   guides(color = guide_legend(ncol = 2)) +
-  labs(color = "Wavelengths") +
+  labs(
+    color = "Wavelengths",
+    title = str_wrap("Vertical profiles of irradiance at different wavelengths", 40)
+  ) +
   scale_color_manual(values = color) +
   xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)")
@@ -204,7 +210,7 @@ df %>%
 
 Estimating $K_{Ed}$ under ice represents a considerable challenge.
 
-```{r, fig.height = 3.5, fig.width = 5, out.width="60%"}
+```{r, fig.height = 4, fig.width = 6, out.width="60%"}
 
 df <- cops %>% 
   filter(profile_filename == "GE2015.ICMP_ICEP_150430_CAST_004" & wavelength == 443)
@@ -223,7 +229,10 @@ df %>%
   theme(legend.title = element_blank()) +
   theme(legend.position = c(0.75, 0.2)) +
   scale_color_manual(values = c("model" = "#E73E26", "observations" = "black")) +
-  annotate("text", x = 0.05, y = 10, label = "Ed(z) == 0.19 * e^{-0.03 * z}", parse = TRUE)
+  annotate("text", x = 0.05, y = 10, label = "Ed(z) == 0.19 * e^{-0.03 * z}", parse = TRUE) +
+  labs(
+    title = "Downwelling irradiance at 443 nm"
+  )
 ```
 
 ---
@@ -232,7 +241,9 @@ class: my-one-page-font, inverse, center, middle
 
 # The main objective
 
-<b><i>Propose a new method to estimate average irradiance over large spatially heterogeneous area.</i></b>
+<b><i>Propose a new method to estimate average irradiance profile, $\overline{E_d}(z)$, over a large spatially heterogeneous area.</i></b>
+
+From a given $E_d(0^-)$ measured or modeled right under the ice sheet.
 
 ---
 
@@ -297,6 +308,65 @@ p1 +
 
 ---
 
+# Why upward radiance?
+
+**Below 10 meters**, the downward and upward attenuation coefficients are correlated. 
+
+```{r, fig.height = 3.5, fig.width = 9, out.width="100%"}
+
+# Plot ked vs klu ---------------------------------------------------------
+
+k <- data.table::fread("data/k_cops.csv.gz") %>% 
+  as_tibble()
+
+r2_threshold <- 0.99
+
+k2 <- k %>%
+  filter(r2 >= r2_threshold & k > 0) %>% 
+  unite(depth_range, start_depth, end_depth, remove = FALSE, sep = "-") %>% 
+  dplyr::select(profile_filename, depth_range, type, wavelength, k) %>% 
+  spread(type, k) %>% 
+  rename(ked = edz, klu = luz) %>% 
+  drop_na(ked, klu) %>% 
+  filter(wavelength < 589) %>% 
+  filter(depth_range %in% c("10-15", "40-45", "75-80")) 
+
+color <- lapply(unique(k2$wavelength), wavelength_to_rgb) %>% unlist()
+color <- setNames(color, unique(k2$wavelength))
+
+appender <- function(string, suffix = " m") paste0(string, suffix)
+
+k2 %>% 
+  ggplot(aes(x = klu, y = ked)) +
+  ggpointdensity::geom_pointdensity(aes(color = factor(wavelength)), size = 2, adjust = 0.5) +
+  # geom_point(aes(color = factor(wavelength)), size = 3) +
+  geom_smooth(method = "lm", se = FALSE, size = 1, color = "#E73E26") +
+  geom_abline(slope = 1, intercept = 0, lty = 2, color = "grey50", size = 1) +
+  facet_wrap(~depth_range, scales = "free", ncol = 3, labeller = as_labeller(appender)) +
+  scale_color_manual(values = color) +
+  xlab(bquote(italic(K[Lu])~(m^{-1}))) +
+  ylab(bquote(italic(K[d])~(m^{-1}))) +
+  scale_x_continuous(breaks = scales::pretty_breaks(n = 3)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 3)) +
+  labs(
+    color = "Wavelength (nm)",
+    title = str_wrap("Attenuation coefficients for downwelling and upwelling radiance are very similar", 50),
+    subtitle = "<span style='color:#E23636'>The red region</span> is not shown because there is a decoupling between <i>K<sub>d</sub></i> and <i>K<sub>Lu</sub></i> at longer<br>wavelengths, possibly due to <span style='color:#E23636'>inelastic Raman scattering</span>."
+  ) +
+  guides(color = guide_legend(
+    keywidth = 0.15,
+    keyheight = 0.15,
+    default.unit = "inch",
+    ncol = 2
+  )) +
+  theme(
+    plot.subtitle = element_markdown()
+  )
+```
+
+
+---
+
 # What we did
 
 - Show that $K_{Lu}$ can be used as a proxy to estimate the mean $\overline{K_{d}}$ in the water column using:
@@ -315,9 +385,47 @@ class: my-one-page-font, inverse, center, middle
 
 # Sampling at the ice camp
 
-- At an ice camp where the water depth was 360 m, from 20 April to 27 July 2016.
+Between 20 April and 27 July 2016 (water depth: 360 m).
 
-- Snow cover and landfast ice thickness varied between 0–49 cm and 106–149 cm, respectively.
+
+```{r, fig.height = 3.5, fig.width = 6, out.width="70%"}
+df <- read_csv("data/greenedge_ice_thick.csv")
+
+df <- df %>% 
+  select(mission, date, sample_type, snow_thickness, sample_thickness_cm_average) %>% 
+  group_by(mission, date, sample_type) %>% 
+  summarise(sample_thickness_cm_average = mean(sample_thickness_cm_average)) %>% 
+  spread(sample_type, sample_thickness_cm_average) %>% 
+  mutate(yday = lubridate::yday(date)) %>% 
+  filter(mission == "ice_camp_2016")
+
+df %>%
+  ggplot(aes(x = yday)) +
+  geom_ribbon(aes(ymin = 0, ymax = snow, fill = "Snow")) +
+  geom_ribbon(aes(ymin = -ice, ymax = 0, fill = "Ice")) +
+  scale_x_continuous(
+    breaks = seq(as.Date("2015-01-01"), as.Date("2015-12-31"), by = "1 month") %>% lubridate::yday(),
+    # limits = c(110, 190),
+    labels = function(x) {
+      as.Date(paste0("2015-", x), "%Y-%j") %>% format("%b")
+    }
+  ) +
+  ylab("Thickness (cm)") +
+  xlab(NULL) +
+  scale_fill_manual(breaks = c("Snow", "Ice"), values = c("Snow" = "#474444", "Ice" = "#5d80b6")) +
+  theme(
+    legend.key.size = unit(0.55, "cm"),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12),
+    plot.title = element_text(size = 14),
+    plot.subtitle = element_text(size = 10)
+  ) +
+  geom_hline(yintercept = 0, lty = 2, size = 0.25) +
+  labs(
+    title = str_wrap("Snow and sea ice thickness during the 2016 ice camp campaigns", 50),
+    subtitle = str_wrap("Snow cover and landfast ice thickness varied between 0–49 cm and 106–149 cm, respectively.", 60)
+  )
+```
 
 ---
 
@@ -333,6 +441,59 @@ class: my-one-page-font, inverse, center, middle
 
 ---
 
+# C-OPS data processing (smoothing)
+
+Fig 1
+
+---
+
+# C-OPS: quality of the measurements
+
+The C-OPS has an exceptional signal-to-noise ratio (SNR).
+
+---
+
+# Contribution of the red wavelengths to PAR
+
+Even if the signal gets a bit noisier in the red, this spectral region has a reduced contribution to the PAR.
+
+```{r, fig.height = 4, fig.width = 6, out.width="60%"}
+df <- cops %>% 
+  filter(profile_filename == "GE2016.ICMP_ICEP_160706_CAST_004") %>% 
+  as_tibble() %>% 
+  drop_na(edz) %>% 
+  filter(depth == 1.4) %>% 
+  select(wavelength, edz)
+
+color <- lapply(unique(df$wavelength), wavelength_to_rgb) %>% unlist()
+color <- setNames(color, unique(df$wavelength))
+
+df %>% 
+  mutate(color = map_chr(wavelength, wavelength_to_rgb)) %>% 
+  ggplot(aes(x = wavelength, y = edz, color = factor(wavelength), group = 1)) +
+  geom_path(size = 1, linejoin = "bevel") +
+  scale_color_manual(values = color) +
+  guides(color = guide_legend(
+    keywidth = 0.15,
+    keyheight = 0.15,
+    default.unit = "inch",
+    ncol = 2
+  )) +
+  ylab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
+  xlab("Wavelength (nm)") +
+  theme(
+    legend.position = "none"
+  ) +
+  labs(
+    title = str_wrap("Downwelling irradiance at 1.4 meters under the ice sheet", 35),
+    subtitle = "Profile taken on 2016-07-06"
+  )
+
+```
+
+
+---
+
 class: my-one-page-font, inverse, center, middle
 
 # 3D Monte Carlo numerical simulations of radiative transfer
@@ -341,9 +502,9 @@ class: my-one-page-font, inverse, center, middle
 
 # 3D Monte Carlo numerical simulations
 
-SimulO was used to simulate the propagation of light under a sea-ice surface containing a 5-meters radius melt pond.
+SimulO was used to simulate the propagation of light under a sea-ice surface (100 m $\times$ 100 m) containing **a 5-meters radius melt pond**.
 
-```{r, fig.height = 4, fig.width = 9, out.width="90%"}
+```{r, fig.height = 4, fig.width = 9, out.width="85%"}
 # Plot 1 ------------------------------------------------------------------
 
 circle <- function(radius, angle = seq(0, 2 * pi, length.out = 200)) {

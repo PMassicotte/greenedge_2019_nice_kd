@@ -59,7 +59,7 @@ $$
 E_d = E_d{(0^-)}e^{-K_d(z)z}
 $$
 
-- `\(K_d(z)z~[m^{-1}]\)` is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
+- `\(K_d(z)~[m^{-1}]\)` is the vertical diffuse attenuation coefficient describing the rate at which light decreases with increasing depth.  
 
 - An important metric used by biologists and to parameter models (**need for precise estimates**).
 
@@ -86,7 +86,7 @@ Due to **spatial horizontal heterogeneity**, measuring vertical light profiles u
 
 # Vertical light distribution in ice-covered water
 
-In ice-covered water, subsurface light maxima at a depth of around 10 m are clearly visible between 400 and 560 nm.
+In ice-covered water, **subsurface light maxima at a depth of around 10 m** are clearly visible between 400 and 560 nm.
 
 &lt;img src="index_files/figure-html/unnamed-chunk-4-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
 
@@ -104,7 +104,9 @@ class: my-one-page-font, inverse, center, middle
 
 # The main objective
 
-&lt;b&gt;&lt;i&gt;Propose a new method to estimate average irradiance over large spatially heterogeneous area.&lt;/i&gt;&lt;/b&gt;
+&lt;b&gt;&lt;i&gt;Propose a new method to estimate average irradiance profile, `\(\overline{E_d}(z)\)`, over a large spatially heterogeneous area.&lt;/i&gt;&lt;/b&gt;
+
+From a given `\(E_d(0^-)\)` measured or modeled right under the ice sheet.
 
 ---
 
@@ -126,6 +128,15 @@ Less influenced by the surface spatial heterogeneity (**no subsurface maximum**)
 
 ---
 
+# Why upward radiance?
+
+**Below 10 meters**, the downward and upward attenuation coefficients are correlated. 
+
+&lt;img src="index_files/figure-html/unnamed-chunk-7-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
 # What we did
 
 - Show that `\(K_{Lu}\)` can be used as a proxy to estimate the mean `\(\overline{K_{d}}\)` in the water column using:
@@ -144,9 +155,10 @@ class: my-one-page-font, inverse, center, middle
 
 # Sampling at the ice camp
 
-- At an ice camp where the water depth was 360 m, from 20 April to 27 July 2016.
+Between 20 April and 27 July 2016 (water depth: 360 m).
 
-- Snow cover and landfast ice thickness varied between 0–49 cm and 106–149 cm, respectively.
+
+&lt;img src="index_files/figure-html/unnamed-chunk-8-1.svg" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -162,6 +174,27 @@ class: my-one-page-font, inverse, center, middle
 
 ---
 
+# C-OPS data processing (smoothing)
+
+Fig 1
+
+---
+
+# C-OPS: quality of the measurements
+
+The C-OPS has an exceptional signal-to-noise ratio (SNR).
+
+---
+
+# Contribution of the red wavelengths to PAR
+
+Even if the signal gets a bit noisier in the red, this spectral region has a reduced contribution to the PAR.
+
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.svg" width="60%" style="display: block; margin: auto;" /&gt;
+
+
+---
+
 class: my-one-page-font, inverse, center, middle
 
 # 3D Monte Carlo numerical simulations of radiative transfer
@@ -170,9 +203,9 @@ class: my-one-page-font, inverse, center, middle
 
 # 3D Monte Carlo numerical simulations
 
-SimulO was used to simulate the propagation of light under a sea-ice surface containing a 5-meters radius melt pond.
+SimulO was used to simulate the propagation of light under a sea-ice surface (100 m `\(\times\)` 100 m) containing **a 5-meters radius melt pond**.
 
-&lt;img src="index_files/figure-html/unnamed-chunk-7-1.svg" width="90%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.svg" width="85%" style="display: block; margin: auto;" /&gt;
 
 &lt;!-- The angular distribution and magnitude of the light field emitted by the surface were chosen to mimic observed field data. --&gt;
 
@@ -203,7 +236,7 @@ A greater dispersion around the reference profile occurred when using `\(K_d\)` 
 
 
 
-&lt;img src="index_files/figure-html/unnamed-chunk-9-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-12-1.svg" width="100%" style="display: block; margin: auto;" /&gt;
 
 
 ---
