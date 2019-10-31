@@ -441,15 +441,85 @@ df %>%
 
 ---
 
+# C-OPS measurements
+
+Figures à Guislain.
+
+---
+
 # C-OPS data processing (smoothing)
 
-Fig 1
+Data were smoothed locally (loess) on a depth grid with a higher vertical resolution at the surface.
+
+```{r, fig.height = 3.5, fig.width = 9, out.width="100%"}
+luz_raw <- read_csv("data/snr_luz_raw.csv")
+luz_fitted <- read_csv("data/snr_luz_fitted.csv")
+
+appender <- function(string, suffix = " nm") paste0(string, suffix)
+
+luz_raw %>% 
+  mutate(color = map_chr(wavelength, wavelength_to_rgb)) %>% 
+  ggplot(aes(x = luz, y = depth)) +
+  geom_point(aes(color = color), show.legend = FALSE, alpha = 0.3, shape = 16) +
+  facet_wrap(~wavelength, scales = "free", labeller = as_labeller(appender)) +
+  scale_y_reverse() +
+  scale_x_log10() +
+  coord_cartesian(xlim = c(1e-07, 1e-03), ylim = c(0, 100)) +
+  geom_path(data = luz_fitted, size = 1) +
+  scale_colour_identity() +
+  xlab(bquote(L[u](z)~(mu*W%*%cm^{-2}%*%s^{-1}))) +
+  ylab("Depth (m)") +
+  labs(
+    title = "Raw vs. smoothed C-OPS data"
+  ) + 
+  theme(
+    legend.title = element_blank(),
+    legend.justification = c(0, 1),
+    legend.position = c(0.01, 0.99)
+  )
+```
+
 
 ---
 
 # C-OPS: quality of the measurements
 
-The C-OPS has an exceptional signal-to-noise ratio (SNR).
+The C-OPS has an exceptional signal-to-noise ratio (SNR). Note that this is for upwelling radiance.
+
+```{r, fig.height = 5, fig.width = 7, out.width="60%"}
+
+files <- fs::dir_ls("data/", recurse = TRUE, regexp = "snr_cops")
+
+wl <- c(
+  "443" = "443 nm",
+  "510" = "510 nm",
+  "683" = "683 nm"
+)
+
+period <- c(
+  "2016-05-06" = "Pre-bloom\nThick cover\n2016-05-06",
+  "2016-07-01" = "Pre-bloom\nThin cover\n2016-07-01",
+  "2016-07-15" = "Bloom\n2016-07-15"
+)
+
+vroom::vroom(files) %>%
+  filter(lambda %in% c(443, 510, 683)) %>%
+  filter(date >= as.Date("2016-05-06")) %>%
+  drop_na(rel_sdev) %>%
+  mutate(color = map_chr(lambda, wavelength_to_rgb)) %>% 
+  ggplot(aes(x = rel_sdev, y = depth, color = color)) +
+  geom_point() +
+  scale_y_reverse() +
+  facet_grid(date~lambda, scales = "free", labeller = labeller(lambda = wl, date = period)) +
+  scale_x_continuous(limits = c(0, 200)) +
+  scale_color_identity() +
+  ylab("Depth (m)") +
+  xlab("Relative standard deviation (%)") +
+  labs(
+    title = str_wrap("Normalized standard deviation for different wavelengths and periods", 40)
+  )
+```
+
 
 ---
 
