@@ -1031,11 +1031,10 @@ class: my-one-page-font, inverse, center, middle
 
 ---
 
-# Questions?
-
-Massicotte, P., Bécu, G., Lambert-Girard, S., Leymarie, E., & Babin, M. (2018). Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences, 8(12), 2693. https://doi.org/10.3390/app8122693
-
-<br>
 <div class="holder">
     <img src="img/greenedge.png" />
 </div>
+
+<br><SPAN STYLE="color: #B2CCE5; font-size: 50pt";><b>Thank you!</b></SPAN><br><br>
+
+Massicotte, P., Bécu, G., Lambert-Girard, S., Leymarie, E., & Babin, M. (2018). Estimating Underwater Light Regime under Spatially Heterogeneous Sea Ice in the Arctic. Applied Sciences, 8(12), 2693. https://doi.org/10.3390/app8122693
