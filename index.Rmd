@@ -275,9 +275,9 @@ One promising way is to use **upwelling radiance, $L_u$,** which is far less inf
 
 ---
 
-# Why upward radiance?
+# Upward radiance: A New Hope
 
-Less influenced by the surface spatial heterogeneity (**no subsurface maximum**).
+Upward radiance is less influenced by the surface spatial heterogeneity (**no subsurface maximum**).
 
 ```{r, fig.height = 4, fig.width = 9, out.width="90%"}
 df <- cops %>% 
@@ -324,7 +324,7 @@ p1 +
   p2 +
   plot_annotation(
     title = "Downwelling irradiance vs upwelling radiance at 443 nm",
-    subtitle = "<i style='color:#E23636'>At 10 m depth, the effects of surface heterogeneity<br>is reduced.</i>",
+    subtitle = "<i style='color:#E23636'>At 10 m depth, the effects of surface heterogeneity is reduced.</i>",
     theme = theme(
       plot.title = element_text(margin = margin(6, 6, 6, 6)), 
       plot.subtitle = element_markdown(lineheight = 1.1)
