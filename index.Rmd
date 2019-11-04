@@ -915,6 +915,7 @@ averaged_simulo <- averaged_simulo %>%
 
 library(minpack.lm)
 library(modelr)
+
 averaged_simulo <- averaged_simulo %>%
   group_by(depth) %>%
   nest() %>%
@@ -983,7 +984,7 @@ predicted_light2 <- predicted_light %>%
 
 ```
 
-```{r, fig.height = 3.5, fig.width = 9, out.width="100%"}
+```{r, fig.height = 3.5 * 1.6, fig.width = 9 * 1.6, out.width="100%"}
 reference_profile %>%
   filter(range %in% c("[0,50]")) %>%
   mutate(
@@ -1009,7 +1010,7 @@ reference_profile %>%
   labs(
     color = str_wrap("Distance from the center of the melt pond (m)", 20),
     title = "Vertical light profiles propagated in the water column using either <i>K</i><sub>*d*</sub> or <i>K</i><sub>*Lu*</sub>",
-    subtitle = "The <span style='color:#E23636'>**thick red line**</span> represents the average <i>E</i><sub>*d*</sub> simulated for the <span style='color:#E23636'>**entire area**</span>. The <span style='color:#4B8D1F'>**green lines**</span> show the propagated <i>E</i><sub>*d*</sub><br> at different distances from the melt pond."
+    subtitle = "The <span style='color:#E23636'>**thick red line**</span> represents the average <i>E</i><sub>*d*</sub> simulated for the <span style='color:#E23636'>**entire area**</span>.<br>The <span style='color:#4B8D1F'>**green lines**</span> show the propagated <i>E</i><sub>*d*</sub>at different distances from the melt pond."
   ) +
   scale_x_continuous(
     labels = scientific_10x,
@@ -1021,8 +1022,15 @@ reference_profile %>%
   xlab("Downward irradiance (number of photons)") +
   paletteer::scale_color_paletteer_c(ggthemes, "Classic Area Green") +
   theme(
-    plot.title = element_markdown(size = 14),
-    plot.subtitle = element_markdown(size = 10) 
+    plot.title = element_markdown(size = 24),
+    plot.subtitle = element_markdown(size = 18),
+    text = element_text(size = 16),
+    strip.text = element_text(size = 18)
+  ) +
+  ggforce::geom_mark_circle(
+    aes(filter = depth == 0.5 & source == "Irradiance (Ed)", 
+        description = "We use this reference value to propagate irradiance in the water column."),  expand = unit(2, "mm"),  label.buffer = unit(20, "mm"),
+    label.fontsize = c(14, 14), label.family = "Exo"
   )
 ```
 
@@ -1032,7 +1040,6 @@ reference_profile %>%
 # The mean relative errors
 
 - Decrease as measurements are made away from the melt pond.
-
 - **Lower by approximately a factor of two** when using $K_{Lu}$ (~7%) compared to $K_{Ed}$ (~12%).
 
 <center>
