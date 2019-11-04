@@ -27,18 +27,26 @@ class: center, middle, inverse, title-slide
 
 class: my-one-page-font, inverse, center, middle
 
-# The vertical distribution of underwater light in the Arctic ocean
+# The vertical distribution of underwater light in open water
+
+An overview
 
 ---
 
 # The importance of underwater light
 
 An adequate description of the underwater light regime is mandatory to understand energy fluxes in aquatic ecosystems.
-  
+
+--
+
 - Primary production
 
+--
+
 - Photochemical reactions (photo-degradation)
-  
+
+--
+
 - Energy budget in the water column
 
 ---
@@ -53,7 +61,7 @@ In open water, downwelling irradiance, `\(E_d\)`, decreases exponentially with i
 
 # Mathematical formulation
 
-Assuming an optically homogeneous water column, the decrease of light with increasing depth can be modeled as follow:
+**Assuming an optically homogeneous water column**, the decrease of light with increasing depth can be modeled as follow:
 
 $$
 E_d = E_d{(0^-)}e^{-K_d(z)z}
@@ -73,13 +81,21 @@ In **optically homogeneous water**, downward irradiance follows quite well a mon
 
 ---
 
+class: my-one-page-font, inverse, center, middle
+
+# Vertical light distribution in ice-covered water
+
+Current challenges
+
+---
+
 # Vertical light distribution in ice-covered water
 
 Due to **spatial horizontal heterogeneity**, measuring vertical light profiles under ice cover presents considerable challenges in comparison to open water.
 
 &lt;center&gt;
 &lt;img src="img/IMG_1093_v2.jpg" height="300" /&gt;
-&lt;figcaption&gt;Photo: Joannie Ferland - Takuvik&lt;/figcaption&gt;
+&lt;figcaption&gt;Photo: Joannie Ferland&lt;/figcaption&gt;
 &lt;/center&gt;
 
 ---
@@ -139,11 +155,15 @@ Less influenced by the surface spatial heterogeneity (**no subsurface maximum**)
 
 # What we did
 
-- Show that `\(K_{Lu}\)` can be used as a proxy to estimate the mean `\(\overline{K_{d}}\)` in the water column using:
+- Show that `\(K_{Lu}\)` can be used as a proxy to estimate the mean `\(\overline{K_{d}}\)` in the water column.
+
+- **In other words, is it better to use `\(K_{Lu}\)` rather then `\(K_{Ed}\)`?**
+
+Based on:
   
-  - *in-situ* C-OPS measurements
+- *in-situ* C-OPS measurements
   
-  - Monte-Carlo simulations (SimulO)
+- Monte-Carlo simulations (using SimulO, a software developped by Edouard Leymarie)
 
 ---
 
@@ -278,6 +298,7 @@ A greater dispersion around the reference profile occurred when using `\(K_d\)` 
 # The mean relative errors
 
 - Decrease as measurements are made away from the melt pond.
+
 - **Lower by approximately a factor of two** when using `\(K_{Lu}\)` (~7%) compared to `\(K_{Ed}\)` (~12%).
 
 &lt;center&gt;

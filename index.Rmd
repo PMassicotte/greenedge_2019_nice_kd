@@ -72,18 +72,26 @@ cops <- data.table::fread(here::here("data/", "cops.csv.gz"))
 
 class: my-one-page-font, inverse, center, middle
 
-# The vertical distribution of underwater light in the Arctic ocean
+# The vertical distribution of underwater light in open water
+
+An overview
 
 ---
 
 # The importance of underwater light
 
 An adequate description of the underwater light regime is mandatory to understand energy fluxes in aquatic ecosystems.
-  
+
+--
+
 - Primary production
 
+--
+
 - Photochemical reactions (photo-degradation)
-  
+
+--
+
 - Energy budget in the water column
 
 ---
@@ -114,7 +122,7 @@ df %>%
 
   ) +
   scale_color_manual(values = color) +
-  xlab(bquote(E[d]~(mu~W%*%~cm^{-2}))) +
+  xlab(bquote(E[d]~(mu*W%*%~cm^{-2}))) +
   ylab("Depth (m)")
 ```
 
@@ -122,7 +130,7 @@ df %>%
 
 # Mathematical formulation
 
-Assuming an optically homogeneous water column, the decrease of light with increasing depth can be modeled as follow:
+**Assuming an optically homogeneous water column**, the decrease of light with increasing depth can be modeled as follow:
 
 $$
 E_d = E_d{(0^-)}e^{-K_d(z)z}
@@ -148,20 +156,28 @@ df <- modelr::add_predictions(df, mod)
 
 df %>% 
   ggplot(aes(x = edz, y = depth)) +
-  geom_point(aes(color = "observations"), show.legend = FALSE) +
-  geom_path(aes(x = pred, color = "model")) +
+  geom_point(aes(color = "Observations"), show.legend = FALSE) +
+  geom_path(aes(x = pred, color = "Model")) +
   scale_y_reverse(limits = c(50, 0)) +
-  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
+  xlab(bquote(E[d]~(mu*W%*%~cm^{-2}))) +
   ylab("Depth (m)") +
   theme(legend.title = element_blank()) +
   theme(legend.position = c(0.85, 0.2)) +
-  scale_color_manual(values = c("model" = "#E73E26", "observations" = "black")) +
-  annotate("text", x = 20, y = 27, label = "Ed(z) == 38 * e^{-0.17 * z}", parse = TRUE) +
+  scale_color_manual(values = c("Model" = "#E73E26", "Observations" = "black")) +
+  annotate("text", x = 20, y = 27, label = "Ed(z) == 38 * e^{-0.17 * z}", parse = TRUE, size = 6) +
   labs(
     title = "Downwelling irradiance at 443 nm",
-    subtitle = bquote(K[d]*"=0.17"~m^{-1})
+    subtitle = "Profile measured in open water"
   )
 ```
+
+---
+
+class: my-one-page-font, inverse, center, middle
+
+# Vertical light distribution in ice-covered water
+
+Current challenges
 
 ---
 
@@ -171,7 +187,7 @@ Due to **spatial horizontal heterogeneity**, measuring vertical light profiles u
 
 <center>
 <img src="img/IMG_1093_v2.jpg" height="300" />
-<figcaption>Photo: Joannie Ferland - Takuvik</figcaption>
+<figcaption>Photo: Joannie Ferland</figcaption>
 </center>
 
 ---
@@ -200,8 +216,9 @@ df %>%
     title = str_wrap("Vertical profiles of irradiance at different wavelengths", 40)
   ) +
   scale_color_manual(values = color) +
-  xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
-  ylab("Depth (m)")
+  xlab(bquote(E[d]~(mu*W%*%~cm^{-2}))) +
+  ylab("Depth (m)") +
+  geom_hline(yintercept = 10, lty = 2)
 ```
 
 ---
@@ -221,17 +238,18 @@ df <- modelr::add_predictions(df, mod)
 
 df %>% 
   ggplot(aes(x = edz, y = depth)) +
-  geom_point(aes(color = "observations"), show.legend = FALSE) +
-  geom_path(aes(x = pred, color = "model")) +
+  geom_point(aes(color = "Observations"), show.legend = FALSE) +
+  geom_path(aes(x = pred, color = "Model")) +
   scale_y_reverse(limits = c(50, 0)) +
   xlab(bquote(E[d]~(mu*W%*%cm^{-2}))) +
   ylab("Depth (m)") +
   theme(legend.title = element_blank()) +
   theme(legend.position = c(0.75, 0.2)) +
-  scale_color_manual(values = c("model" = "#E73E26", "observations" = "black")) +
-  annotate("text", x = 0.05, y = 10, label = "Ed(z) == 0.19 * e^{-0.03 * z}", parse = TRUE) +
+  scale_color_manual(values = c("Model" = "#E73E26", "Observations" = "black")) +
+  annotate("text", x = 0.05, y = 10, label = "Ed(z) == 0.19 * e^{-0.03 * z}", parse = TRUE, size = 6) +
   labs(
-    title = "Downwelling irradiance at 443 nm"
+    title = "Downwelling irradiance at 443 nm",
+    subtitle = "Profile measured under an heterogeneous snow/sea ice surface"
   )
 ```
 
@@ -280,7 +298,10 @@ p1 <- df %>%
     legend.position = "none"
   ) +
   geom_hline(yintercept = 10, lty = 2, size = 0.25) +
-  paletteer::scale_color_paletteer_d(ggthemes, wsj_colors6)
+  paletteer::scale_color_paletteer_d(ggthemes, wsj_colors6) +
+  labs(
+    subtitle = "Profiles normalized at their maximum."
+  )
 
 p2 <- df %>%
   filter(depth >= 10) %>% 
@@ -290,7 +311,10 @@ p2 <- df %>%
   geom_path(aes(x = edz, color = "Ed(z)")) +
   geom_path(aes(x = luz, color = "Lu(z)")) +
   scale_y_reverse(limits = c(50, 0)) +
-  labs(color = "Light type") +
+  labs(
+    color = "Light type",
+    subtitle = "Profiles normalized at 10 m."
+  ) +
   xlab("Normalized light") +
   ylab("Depth (m)") +
   geom_hline(yintercept = 10, lty = 2, size = 0.25) +
@@ -300,8 +324,11 @@ p1 +
   p2 +
   plot_annotation(
     title = "Downwelling irradiance vs upwelling radiance at 443 nm",
-    subtitle = "Profiles have been normalized to their maximum. <i style='color:#E23636'>At 10 m depth, the effects of surface heterogeneity<br>is reduced.</i>",
-    theme = theme(plot.title = element_text(margin = margin(2,0,2,0)), plot.subtitle = element_markdown(lineheight = 1.1))
+    subtitle = "<i style='color:#E23636'>At 10 m depth, the effects of surface heterogeneity<br>is reduced.</i>",
+    theme = theme(
+      plot.title = element_text(margin = margin(6, 6, 6, 6)), 
+      plot.subtitle = element_markdown(lineheight = 1.1)
+    )
   )
 
 ```
@@ -369,11 +396,15 @@ k2 %>%
 
 # What we did
 
-- Show that $K_{Lu}$ can be used as a proxy to estimate the mean $\overline{K_{d}}$ in the water column using:
+- Show that $K_{Lu}$ can be used as a proxy to estimate the mean $\overline{K_{d}}$ in the water column.
+
+- **In other words, is it better to use $K_{Lu}$ rather then $K_{Ed}$?**
+
+Based on:
   
-  - *in-situ* C-OPS measurements
+- *in-situ* C-OPS measurements
   
-  - Monte-Carlo simulations (SimulO)
+- Monte-Carlo simulations (using SimulO, a software developped by Edouard Leymarie)
 
 ---
 
@@ -424,7 +455,7 @@ df %>%
   labs(
     title = str_wrap("Snow and sea ice thickness during the 2016 ice camp campaign", 50),
     subtitle = str_wrap("Snow cover and landfast ice thickness varied between 0–49 cm and 106–149 cm, respectively.", 60)
-  )
+  ) 
 ```
 
 ---
@@ -635,7 +666,7 @@ p1 <- ggplot() +
   xlab(bquote(italic(x) * "-distance (m)")) +
   ylab(bquote(italic(y) * "-distance (m)")) +
   geom_segment(data = configuration, aes(x = 0, y = 0, xend = x, yend = y, group = radius), size = 0.25) +
-  geom_label(data = configuration, aes(x = x, y = y, label = sprintf("%2.0f%% melt pond cover", radius * 100)), hjust = 0, label.size = 0, nudge_x = 1, size = 2, label.padding = unit(0.05, "lines")) +
+  geom_label(data = configuration, aes(x = x, y = y, label = sprintf("%2.0f%% melt pond cover", radius * 100)), hjust = 0, label.size = 0, nudge_x = 1, size = 3, label.padding = unit(0.05, "lines")) +
   guides(color = guide_legend(
     keywidth = 0.15,
     keyheight = 0.15,
@@ -663,10 +694,10 @@ p2 <- ggplot() +
   annotate("segment", x = 50, xend = 50, y = 0, yend = -25, lty = 1, size = 0.75, color = "#57e5d6") +
   annotate("segment", x = 50, xend = -50, y = -25, yend = -25, lty = 1, size = 0.75, color = "#57e5d6") +
 
-  annotate("text", x = 35, y = -50, label = str_wrap("3D volume for which simulated data was extracted", width = 30), size = 3, family = "IBM Plex Sans Light") +
-  annotate("segment", x = 25, xend = 25, y = -40, yend = -28, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm"))) +
+  annotate("text", x = 42, y = -50, label = str_wrap("3D volume for which simulated data was extracted", width = 30), size = 4) +
+  annotate("segment", x = 26, xend = 26, y = -40, yend = -28, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm"))) +
 
-  annotate("text", x = -75, y = -50, label = str_wrap("2D detectors placed every 0.5 m depth", width = 20), size = 3, family = "IBM Plex Sans Light") +
+  annotate("text", x = -75, y = -50, label = str_wrap("2D detectors placed every 0.5 m depth", width = 20), size = 4) +
   annotate("segment", x = -75, xend = -75, y = -40, yend = -28, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm"))) +
 
   # annotate("label", x = 28, y = -5, label = "Melt pond", size = 3, label.size = NA) +
@@ -684,11 +715,11 @@ p2 <- ggplot() +
   annotate("segment", x = -75, xend = -85, y = 0, yend = -10, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm")), color = "orange") +
   annotate("segment", x = -75, xend = -65, y = 0, yend = -10, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm")), color = "orange") +
 
-  annotate("text", x = -110, y = -100, label = "Homogeneous water column:", size = 3.5, hjust = 0, fontface = 2, family = "IBM Plex Sans Light") +
+  annotate("text", x = -110, y = -100, label = "Homogeneous water column:", size = 4, hjust = 0, fontface = 2) +
   annotate("text", x = -110, y = -110, label = expression(italic(a) * "=" * italic(b) * "=" * 0.05 * m^{
     -1
-  }), size = 3, hjust = 0, family = "IBM Plex Sans Light", parse = TRUE) +
-  annotate("text", x = -110, y = -120, label = "VSF: Fourrier-Forand 3%", size = 3, hjust = 0, family = "IBM Plex Sans Light") +
+  }), size = 4, hjust = 0, parse = TRUE) +
+  annotate("text", x = -110, y = -120, label = "VSF: Fourrier-Forand 3%", size = 4, hjust = 0) +
 
   theme(panel.grid = element_blank()) +
   theme(panel.border = element_blank()) +
@@ -1001,6 +1032,7 @@ reference_profile %>%
 # The mean relative errors
 
 - Decrease as measurements are made away from the melt pond.
+
 - **Lower by approximately a factor of two** when using $K_{Lu}$ (~7%) compared to $K_{Ed}$ (~12%).
 
 <center>
