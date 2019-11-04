@@ -136,9 +136,9 @@ $$
 
 # Vertical light distribution in open water
 
-In open water, downward irradiance follows quite well a monotonically exponential decrease with depth.
+In **optically homogeneous water**, downward irradiance follows quite well a monotonically exponential decrease with depth.
 
-```{r, fig.height = 4, fig.width = 6, out.width="60%"}
+```{r, fig.height = 4, fig.width = 6, out.width="55%"}
 df <- cops %>% 
   filter(profile_filename == "GE2016.ICMP_ICEP_160706_CAST_005" & wavelength == 443)
 
@@ -746,7 +746,7 @@ class: my-one-page-font, inverse, center, middle
 
 # Simulating the under-ice light field
 
-The under-ice light estimated using $L_u$ field **is less influenced by the melt pond** compared to the light field estimated using $E_d$.
+The under-ice radiance light field $L_u$ **is less influenced by the melt pond** compared to the irradiance light field $E_u$.
 
 <center>
 <img src="img/fig6.png" height="350" />
