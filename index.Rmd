@@ -627,7 +627,7 @@ class: my-one-page-font, inverse, center, middle
 
 Propagate light under a sea-ice surface *(50-meters radius)* containing *a 5-meters radius melt pond*. **The melt pond represents 1% of the surface area.**
 
-```{r, fig.height = 4, fig.width = 9, out.width="85%"}
+```{r simulo_geometry, fig.height = 4, fig.width = 9, out.width="85%"}
 # Plot 1 ------------------------------------------------------------------
 
 circle <- function(radius, angle = seq(0, 2 * pi, length.out = 200)) {
