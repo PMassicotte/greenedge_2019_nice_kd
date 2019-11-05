@@ -623,9 +623,9 @@ class: my-one-page-font, inverse, center, middle
 
 ---
 
-# 3D Monte Carlo numerical simulations
+# 3D Monte Carlo numerical simulations (SimulO)
 
-SimulO was used to simulate the propagation of light under a sea-ice surface (100 m $\times$ 100 m) containing **a 5-meters radius melt pond**.
+Propagate light under a sea-ice surface *(50-meters radius)* containing *a 5-meters radius melt pond*. **The melt pond represents 1% of the surface area.**
 
 ```{r, fig.height = 4, fig.width = 9, out.width="85%"}
 # Plot 1 ------------------------------------------------------------------
@@ -637,7 +637,8 @@ circle <- function(radius, angle = seq(0, 2 * pi, length.out = 200)) {
   )
 }
 
-r <- c(seq(5.5, 50, by = 5), 50)
+# r <- c(seq(5.5, 50, by = 5), 50)
+r <- c(seq(50, 50, by = 5), 50)
 
 sampling_circle <- map(r, circle) %>%
   set_names(r) %>%
@@ -654,29 +655,82 @@ configuration <- map2(sqrt(25 / c(0.25, 0.20, 0.15, 0.10, 0.05, 0.01)), seq(0, p
 frame <- tibble(xmin = -50, xmax = 50, ymin = -50, ymax = 50)
 
 p1 <- ggplot() +
-  geom_rect(data = frame, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax), fill = "transparent", color = "#57e5d6") +
-  geom_path(data = sampling_circle, aes(x = x, y = y, color = factor(radius)), size = 0.25) +
+  geom_rect(
+    data = frame,
+    aes(
+      xmin = xmin,
+      xmax = xmax,
+      ymin = ymin,
+      ymax = ymax
+    ),
+    fill = "transparent",
+    color = "#57e5d6"
+  ) +
+  geom_path(
+    data = sampling_circle,
+    aes(x = x, y = y),
+    size = 1,
+    color = "red"
+  ) +
   geom_polygon(data = melt_pond, aes(x = x, y = y, fill = "Melt pond")) +
   scale_x_continuous(limits = c(-50, 50)) +
   scale_y_continuous(limits = c(-50, 50)) +
   scale_fill_manual(values = c("Melt pond" = "#6097ce")) +
-  # scale_color_brewer(palette = "BuPu") +
-  labs(fill = "") +
   labs(color = "Sampling\ndistance (m)") +
   xlab(bquote(italic(x) * "-distance (m)")) +
   ylab(bquote(italic(y) * "-distance (m)")) +
-  geom_segment(data = configuration, aes(x = 0, y = 0, xend = x, yend = y, group = radius), size = 0.25) +
-  geom_label(data = configuration, aes(x = x, y = y, label = sprintf("%2.0f%% melt pond cover", radius * 100)), hjust = 0, label.size = 0, nudge_x = 1, size = 3, label.padding = unit(0.05, "lines")) +
+  # geom_segment(data = configuration, aes(x = 0, y = 0, xend = x, yend = y, group = radius), size = 0.25) +
+  # geom_label(data = configuration, aes(x = x, y = y, label = sprintf("%2.0f%% melt pond cover", radius * 100)), hjust = 0, label.size = 0, nudge_x = 1, size = 3, label.padding = unit(0.05, "lines")) +
   guides(color = guide_legend(
     keywidth = 0.15,
     keyheight = 0.15,
     default.unit = "inch",
     nrow = 4
   )) +
-  theme(
-    legend.position = "none"
+  theme(legend.position = "none") +
+  coord_equal() +
+  # annotate("segment", x = -5, xend = 5, y = 7, yend = 7, color = "#6097ce") +
+  annotate(
+    "text",
+    x = 0,
+    y = 12,
+    label = "5-meters radius melt pond",
+    color = "#6097ce",
+    size = 6
   ) +
-  coord_equal()
+  # annotate("segment", x = -45, xend = 45, y = -7, yend = -7, color = "red") +
+  annotate(
+    "text",
+    x = 0,
+    y = -12,
+    label = "50-meters radius study area",
+    color = "red",
+    size = 6
+  ) +
+  geom_curve(
+    aes(
+      x = 0,
+      y = -17,
+      xend = -20.2,
+      yend = -40.2
+    ),
+    curvature = -0.25,
+    color = "red",
+    arrow = arrow(length = unit(4, "mm")),
+    lwd = 0.5
+  ) +
+  geom_curve(
+    aes(
+      x = -25,
+      y = 8,
+      xend = -10,
+      yend = 0
+    ),
+    curvature = 0.25,
+    color = "#6097ce",
+    arrow = arrow(length = unit(4, "mm")),
+    lwd = 0.5
+  )
 
 # Plot 2 ------------------------------------------------------------------
 
@@ -694,10 +748,10 @@ p2 <- ggplot() +
   annotate("segment", x = 50, xend = 50, y = 0, yend = -25, lty = 1, size = 0.75, color = "#57e5d6") +
   annotate("segment", x = 50, xend = -50, y = -25, yend = -25, lty = 1, size = 0.75, color = "#57e5d6") +
 
-  annotate("text", x = 42, y = -50, label = str_wrap("3D volume for which simulated data was extracted", width = 30), size = 4) +
+  annotate("text", x = 42, y = -55, label = str_wrap("3D volume for which simulated data was extracted", width = 30), size = 4) +
   annotate("segment", x = 26, xend = 26, y = -40, yend = -28, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm"))) +
 
-  annotate("text", x = -75, y = -50, label = str_wrap("2D detectors placed every 0.5 m depth", width = 20), size = 4) +
+  annotate("text", x = -75, y = -55, label = str_wrap("2D detectors placed every 0.5 m depth", width = 20), size = 4) +
   annotate("segment", x = -75, xend = -75, y = -40, yend = -28, lty = 1, size = 0.25, arrow = arrow(length = unit(1.5, "mm"))) +
 
   # annotate("label", x = 28, y = -5, label = "Melt pond", size = 3, label.size = NA) +
