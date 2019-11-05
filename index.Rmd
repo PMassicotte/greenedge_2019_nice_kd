@@ -1064,7 +1064,7 @@ reference_profile %>%
   labs(
     color = str_wrap("Distance from the center of the melt pond (m)", 20),
     title = "Vertical light profiles propagated in the water column using either <i>K</i><sub>*d*</sub> or <i>K</i><sub>*Lu*</sub>",
-    subtitle = "The <span style='color:#E23636'>**thick red line**</span> represents the average <i>E</i><sub>*d*</sub> simulated for the <span style='color:#E23636'>**entire area**</span>.<br>The <span style='color:#4B8D1F'>**green lines**</span> show the propagated <i>E</i><sub>*d*</sub>at different distances from the melt pond."
+    subtitle = "The <span style='color:#E23636'>**thick red line**</span> represents the average <i>E</i><sub>*d*</sub> simulated for the <span style='color:#E23636'>**entire area**</span>.<br>The <span style='color:#4B8D1F'>**green lines**</span> show the propagated <i>E</i><sub>*d*</sub> at different distances from the melt pond."
   ) +
   scale_x_continuous(
     labels = scientific_10x,
